@@ -159,6 +159,44 @@ namespace SaodBST
             return _MinValueRec(subroot.left);
         }
 
+        //повороты, балансировка
 
+        //малое правое вращение
+        private TreeNode<T> _RightRotate(TreeNode<T> subroot)
+        {
+            TreeNode<T> b = subroot.left;
+            subroot.left = b.right;
+            b.right = subroot;
+            return b;
+        }
+
+        //малое левое вращение
+        private TreeNode<T> _LeftRotate(TreeNode<T> subroot)
+        {
+            TreeNode<T> b = subroot.right;
+            subroot.right = b.left;
+            b.left = subroot;
+            return b;
+        }
+
+        //балансировка узла
+
+        public TreeNode<T> Balance(TreeNode<T> subroot)
+        {
+            if(_GetDeep(subroot.right) - _GetDeep(subroot.left) == 2)
+            {
+                //большое левое вращение
+                if(_GetDeep(subroot.right.left) > _GetDeep(subroot.right.right))
+                    subroot.right = _RightRotate(subroot.right);
+                return _LeftRotate(subroot);
+            }
+            if (_GetDeep(subroot.right) - _GetDeep(subroot.left) == -2)
+            {
+                if (_GetDeep(subroot.left.right) > _GetDeep(subroot.left.left))
+                    subroot.left = _LeftRotate(subroot.left);
+                return _RightRotate(subroot);
+            }
+            return subroot;
+        }
     }
 }
