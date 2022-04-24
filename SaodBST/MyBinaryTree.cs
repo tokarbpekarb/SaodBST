@@ -10,7 +10,7 @@ namespace SaodBST
     {
         private TreeNode<T> _root;
 
-        internal TreeNode<T> Root { get => _root; private set => _root = value; }
+        internal TreeNode<T> Root { get => _root;  set => _root = value; }
 
         public void Add(T item)
         {
@@ -157,6 +157,56 @@ namespace SaodBST
             if (subroot.left == null)
                 return subroot;
             return _MinValueRec(subroot.left);
+        }
+
+        //отображение / печать
+
+        private KeyValuePair<int, string> ToStringHelper(TreeNode<T> n)
+        {
+            if (n == null)
+                return new KeyValuePair<int, string>(1, "\n");
+
+            var left = ToStringHelper(n.left);
+            var right = ToStringHelper(n.right);
+
+            var objString = n.value.ToString();
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(' ', left.Key - 1);
+            stringBuilder.Append(objString);
+            stringBuilder.Append(' ', right.Key - 1);
+            stringBuilder.Append('\n');
+
+            var i = 0;
+            while (i * left.Key < left.Value.Length && i * right.Key < right.Value.Length)
+            {
+                stringBuilder.Append(left.Value, i * left.Key, left.Key - 1);
+                stringBuilder.Append(' ', objString.Length);
+                stringBuilder.Append(right.Value, i * right.Key, right.Key);
+                ++i;
+            }
+
+            while (i * left.Key < left.Value.Length)
+            {
+                stringBuilder.Append(left.Value, i * left.Key, left.Key - 1);
+                stringBuilder.Append(' ', objString.Length + right.Key - 1);
+                stringBuilder.Append('\n');
+
+                ++i;
+            }
+
+            while (i * right.Key < right.Value.Length)
+            {
+                stringBuilder.Append(' ', left.Key + objString.Length - 1);
+                stringBuilder.Append(right.Value, i * right.Key, right.Key);
+                ++i;
+            }
+            return new KeyValuePair<int, string>(left.Key + objString.Length + right.Key - 1, stringBuilder.ToString());
+        }
+        public string Print()
+        {
+            var res = ToStringHelper(Root).Value;
+            return res;
         }
 
         //повороты, балансировка
